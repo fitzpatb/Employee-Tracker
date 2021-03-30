@@ -1,22 +1,26 @@
 {
-  "name": "employee-tracker",
+  "name": "Employee-Tracker",
   "version": "1.0.0",
-  "description": "Employee tracking app",
+  "description": "",
   "main": "tracker.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node tracker.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fitzpatb/Employee-Tracker.git"
   },
-  "author": "Brett Fitzpatrick",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/fitzpatb/Employee-Tracker/issues"
   },
   "homepage": "https://github.com/fitzpatb/Employee-Tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.0.0",
     "mysql": "^2.18.1"
   }
 }
