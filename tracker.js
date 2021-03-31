@@ -77,14 +77,14 @@ function addEmployee () {
           type: "list",
           message: "What is the Employee's role?",
           name: "role",
-          choices: [roleArray]
+          choices: roleArray
         }
       ])
       .then((response) => {
         let roleId;
         for (let j = 0; j < res.length; j++) {
           if (response.role === res[j].title) {
-            roleId = res[j].title;
+            roleId = res[j].id;
           }
         }
         connection.query("INSERT INTO employee SET ?",
@@ -100,4 +100,50 @@ function addEmployee () {
       })
   })
 
+}
+function addRole () {
+  connection.query("SELECT * FROM department", function (err, res) {
+    if (err) throw err;
+    let deptArray = [];
+    for (let i = 0; i < res.length; i++) {
+      deptArray.push(res[i].title);
+    }
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the Role?",
+          name: "role"
+        },
+        {
+          type: "input",
+          message: "What is the roles salary?",
+          name: "salary",
+        },
+        {
+          type: "list",
+          message: "What department will the role be in?",
+          name: "department",
+          choices: deptArray
+        }
+      ])
+      .then((repsonse) => {
+        let deptId;
+        for (let j = 0; j < res.length; j++) {
+          if (response.department === res[j].title) {
+            deptId = res[j].id;
+          }
+        }
+        connection.query("INSERT INTO role SET ?",
+        {
+          title: response.first,
+          salary: response.last,
+          department_id: deptId
+        },
+        (err) => {
+          if (err) throw err;
+          console.log("success");
+        })
+      })
+  })
 }
