@@ -21,6 +21,9 @@ connection.connect((err) => {
   runTracker();
 });
 
+//global variables
+
+
 //basic prompt
 function runTracker() {
   inquirer
@@ -32,8 +35,7 @@ function runTracker() {
         choices: [
           "Add Employee",
           "Add Role",
-          "Add Department",
-
+          "Add Department"
         ]
       }
     ])
@@ -53,20 +55,49 @@ function runTracker() {
 }
 
 function addEmployee () {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is the Employee's first name?",
-        name: "first"
-      },
-      {
-        type: "input",
-        message: "What is the Employee's last name?",
-        name: "last"
-      }
-    ])
-    .then((response) => {
+  connection.query("SELECT * FROM role", function (err, res) {
+    if (err) throw err;
+    let roleArray = [];
+    for (let i = 0; i < res.length; i++) {
+      roleArray.push(res[i].title);
+    }
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the Employee's first name?",
+          name: "first"
+        },
+        {
+          type: "input",
+          message: "What is the Employee's last name?",
+          name: "last"
+        },
+        {
+          type: "list",
+          message: "What is the Employee's role?",
+          name: "role",
+          choices: [roleArray]
+        }
+      ])
+      .then((response) => {
+        let roleId;
+        for (let j = 0; j < res.length; j++) {
+          if (response.role === res[j].title) {
+            roleId = res[j].title;
+          }
+        }
+        connection.query("INSERT INTO employee SET ?",
+        {
+          first_name: response.first,
+          last_name: response.last,
+          role_id: roleId
+        },
+        (err) => {
+          if (err) throw err;
+          console.log("success");
+        })
+      })
+  })
 
-    })
 }
