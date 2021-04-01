@@ -147,3 +147,23 @@ function addRole () {
       })
   })
 }
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the name of the Department?",
+        name: "department"
+      }
+    ])
+    .then((response) => {
+      connection.query("INSERT INTO department SET ?",
+      {
+        name: response.department
+      },
+      (err) => {
+        if (err) throw err;
+        console.log("success");
+      })
+    })
+}
