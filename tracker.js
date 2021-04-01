@@ -1,6 +1,7 @@
 //dependiencies
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 //make connection
 const connection = mysql.createConnection({
@@ -35,7 +36,10 @@ function runTracker() {
         choices: [
           "Add Employee",
           "Add Role",
-          "Add Department"
+          "Add Department",
+          "View all Employees",
+          "View all Roles",
+          "View all Departments"
         ]
       }
     ])
@@ -50,10 +54,19 @@ function runTracker() {
         case "Add Department":
           addDepartment();
           break;
+        case "View all Employees":
+          viewEmployee();
+          break;
+        case "View all Roles":
+          viewRole();
+          break;
+        case "View all Departments":
+          viewDepartment();
+          break;
       }
     });
 }
-
+// functions that create data
 function addEmployee () {
   connection.query("SELECT * FROM role", function (err, res) {
     if (err) throw err;
@@ -147,6 +160,7 @@ function addRole () {
       })
   })
 }
+
 function addDepartment() {
   inquirer
     .prompt([
@@ -165,5 +179,14 @@ function addDepartment() {
         if (err) throw err;
         console.log("success");
       })
+    })
+}
+
+//functions that read data
+function viewEmployee() {
+  connection.query("SELECT * FROM employee",
+    (err, res) => {
+      if (err) throw err;
+      console.table('Employees:', res)
     })
 }
