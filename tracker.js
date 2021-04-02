@@ -141,16 +141,16 @@ function addRole () {
         {
           type: "input",
           message: "What is the roles salary?",
-          name: "salary",
+          name: "salary"
         },
         {
           type: "list",
-          message: "What department will the role be in?",
+          message: "In which Department?",
           name: "department",
           choices: deptArray
         }
       ])
-      .then((repsonse) => {
+      .then((response) => {
         let deptId;
         for (let j = 0; j < res.length; j++) {
           if (response.department === res[j].title) {
@@ -159,8 +159,8 @@ function addRole () {
         }
         connection.query("INSERT INTO role SET ?",
         {
-          title: response.first,
-          salary: response.last,
+          title: response.role,
+          salary: response.salary,
           department_id: deptId
         },
         (err) => {
