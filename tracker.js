@@ -39,7 +39,8 @@ function runTracker() {
           "Add Department",
           "View all Employees",
           "View all Roles",
-          "View all Departments"
+          "View all Departments",
+          "Update Employee Role"
         ]
       }
     ])
@@ -62,6 +63,9 @@ function runTracker() {
           break;
         case "View all Departments":
           viewDepartment();
+          break;
+        case "Update Employee Role":
+          findEmployee();
           break;
       }
     });
@@ -109,7 +113,8 @@ function addEmployee () {
         (err) => {
           if (err) throw err;
           console.log("success");
-        })
+        });
+        runTracker();
       })
   })
 
@@ -157,6 +162,7 @@ function addRole () {
           if (err) throw err;
           console.log("success");
         })
+        runTracker();
       })
   })
 }
@@ -178,15 +184,102 @@ function addDepartment() {
       (err) => {
         if (err) throw err;
         console.log("success");
-      })
+      });
+      runTracker();
     })
 }
 
 //functions that read data
 function viewEmployee() {
-  connection.query("SELECT * FROM employee",
-    (err, res) => {
-      if (err) throw err;
-      console.table('Employees:', res)
-    })
+  connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;",
+  (err, res) => {
+    if (err) throw err;
+    console.table('Employees:', res)
+  });
+  runTracker();
+}
+
+function viewRole() {
+  connection.query("SELECT * FROM role",
+  (err, res) => {
+    if (err) throw err;
+    console.table("Roles:", res)
+  });
+  runTracker();
+}
+
+function viewDepartment() {
+  connection.query("SELECT * FROM department",
+  (err, res) => {
+    if (err) throw err;
+    console.table("Departments:", res)
+  });
+  runTracker();
+}
+
+//functions that update
+function findEmployee() {
+
+  let employeeArray = [];
+  let employeeId;
+
+
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    for (let i = 0; i < res.length; i++) {
+      employeeArray.push(res[i].first_name + " " + res[i].last_name);
+    }
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "What Employee do you want to update?",
+          name: "employee",
+          choices: employeeArray
+        }
+      ])
+      .then((response) => {
+        for (let l = 0; l < res.length; l++) {
+          if (response.employee === res[l].first_name + " " + res[l].last_name) {
+            employeeId = res[l].id;
+          }
+        }
+        updateRole(employeeId);
+      })
+  });
+
+
+
+}
+
+function updateRole(employeeId) {
+  let roleArray = [];
+  connection.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err;
+    for (let j = 0; j < res.length; j++) {
+      roleArray.push(res[j].title);
+      console.log(roleArray);
+    }
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "What is the Employee's new Role",
+          name: "role",
+          choices: roleArray
+        }
+      ])
+      .then((response) => {
+        let roleId;
+        for (let k = 0; k < res.length; k++) {
+          if (response.role === res[k].title) {
+            roleId = res[k].id;
+          }
+        }
+        connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [roleId, employeeId], (err) => {
+          if (err) throw err;
+          console.log("success");
+        })
+      })
+  });
 }
