@@ -129,7 +129,7 @@ function addRole () {
     if (err) throw err;
     let deptArray = [];
     for (let i = 0; i < res.length; i++) {
-      deptArray.push(res[i].title);
+      deptArray.push(res[i].name);
     }
     inquirer
       .prompt([
