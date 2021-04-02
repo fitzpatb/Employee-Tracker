@@ -21,6 +21,9 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}\n`);
+  console.log(chalk.greenBright.bold(figlet.textSync('Employee Tracker')));
+  console.log(``);
+  console.log(`                                                          ` + chalk.greenBright.bold('Created By: Brett Fitzpatrick'));
   runTracker();
 });
 
@@ -29,9 +32,7 @@ connection.connect((err) => {
 
 //basic prompt
 function runTracker() {
-  console.log(chalk.greenBright.bold(figlet.textSync('Employee Tracker')));
-  console.log(``);
-  console.log(`                                                          ` + chalk.greenBright.bold('Created By: Brett Fitzpatrick'));
+
   inquirer
     .prompt([
       {
