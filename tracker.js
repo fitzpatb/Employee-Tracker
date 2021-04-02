@@ -2,6 +2,8 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+const figlet = require('figlet');
+const chalk = require('chalk');
 
 //make connection
 const connection = mysql.createConnection({
@@ -27,6 +29,9 @@ connection.connect((err) => {
 
 //basic prompt
 function runTracker() {
+  console.log(chalk.greenBright.bold(figlet.textSync('Employee Tracker')));
+  console.log(``);
+  console.log(`                                                          ` + chalk.greenBright.bold('Created By: Brett Fitzpatrick'));
   inquirer
     .prompt([
       {
@@ -280,6 +285,7 @@ function updateRole(employeeId) {
           if (err) throw err;
           console.log("success");
         })
+        runTracker();
       })
   });
 }
